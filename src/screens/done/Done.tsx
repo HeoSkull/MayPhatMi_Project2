@@ -1,15 +1,32 @@
 import React from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, View, Text } from 'react-native';
-import Title from '../../components/title/title';
+import { Image, ImageBackground, ScrollView, StyleSheet, View, Text, PanResponder } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+
+import { RootStackParamList } from '../../navigator/RootNavigator';
 import { CustomFonts } from '../../shared/fonts';
 import ButtonClick from '../../components/button/buttonClick';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-
+import Title from '../../components/title/title';
+type DoneScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Done'>;
 
 export default function Done() {
+  const navigation = useNavigation<DoneScreenNavigationProp>();
   const loaded = CustomFonts();
   if (!loaded)
     return null;
+  const recognizeDrag = ({ dy }: { dy: number }) => {
+    if (dy > 50) return 1; // left to right
+    return 0;
+  };
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: (e, gestureState) => { return true; },
+    onPanResponderEnd: (e, gestureState) => {
+      if (recognizeDrag(gestureState) === 1) {
+        navigation.navigate('OutOfNoodles')
+      }
+      return true;
+    }
+  });
   return (
     <View style={styles.container}>
         <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
@@ -25,9 +42,9 @@ export default function Done() {
                 </View>
 
                 <View style={{marginTop: 55}}>
-                  <ButtonClick text='Back to home'/> 
+                  <ButtonClick text='Back to home' onClick={()=> navigation.navigate('Welcome')}/> 
                 </View> 
-                <View style={{flexDirection: 'column', alignItems: 'center', marginTop: 10}}>
+                <View style={{flexDirection: 'column', alignItems: 'center', marginTop: 10}} {...panResponder.panHandlers}>
                   <Text style={[styles.text2]}>Get them below </Text>
                   <Image source={require('../../../assets/ArrowDownGesture.png')} style={{height: 40, width: 20}}/>
                 </View>
@@ -74,6 +91,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 20
   }
-
 });
 

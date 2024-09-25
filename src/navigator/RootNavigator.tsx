@@ -5,6 +5,7 @@ import Information from '../screens/information/Info';
 import Error from '../screens/error/Error';
 import OutOfNoodles from '../screens/outOfNoodle/OutOfNoodle';
 import Done from '../screens/done/Done';
+
 export type RootStackParamList = {
   'Welcome': undefined;
   'Information': undefined;

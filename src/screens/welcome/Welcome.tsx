@@ -1,48 +1,62 @@
 import React from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, View, Text } from 'react-native';
-import Title from '../../components/title/title';
+import { Image, ImageBackground, ScrollView, StyleSheet, View, Text, PanResponder } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
-import { CustomFonts } from '../../shared/fonts';
-import ScanGlide from '../../components/ScanImgGlide/ScanGlide';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
+import { RootStackParamList } from '../../navigator/RootNavigator';
+import { CustomFonts } from '../../shared/fonts';
+import Title from '../../components/title/title';
+import ScanGlide from '../../components/ScanImgGlide/ScanGlide';
+type WelcomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
 
 export default function Welcome() {
+  const navigation = useNavigation<WelcomeScreenNavigationProp>();
   const loaded = CustomFonts();
   if (!loaded)
     return null;
+  const recognizeDrag = ({ dx }: { dx: number }) => {
+    if (dx > 200) return 1; // left to right
+    return 0;
+  };
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: (e, gestureState) => { return true; },
+    onPanResponderEnd: (e, gestureState) => {
+      if (recognizeDrag(gestureState) === 1) {
+        navigation.navigate('Error')
+      }
+      return true;
+    }
+  });
   return (
     <View style={styles.container}>
       <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
 
-          <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+        <Title text='WELCOME'/>
 
-          <Title text='WELCOME'/>
-
-          <View style={[styles.outerBorder, styles.shadowBox]}>
-            <View style={styles.innerBorder}>
-              <Video 
-                source={require('../../../assets/welcome_video.mp4')}
-                rate={1.0}
-                isMuted={false}
-                shouldPlay={true} 
-                isLooping={true} 
-                resizeMode={ResizeMode.CONTAIN}
-                style={styles.video}
-              />
-            </View>
+        <View style={[styles.outerBorder, styles.shadowBox]}>
+          <View style={styles.innerBorder}>
+            <Video 
+              source={require('../../../assets/welcome_video.mp4')}
+              rate={1.0}
+              isMuted={false}
+              shouldPlay={true} 
+              isLooping={true} 
+              resizeMode={ResizeMode.CONTAIN}
+              style={styles.video}
+            />
           </View>
-          
-          <View style={styles.scanText}>
-            <Image source={require('../../../assets/Scan.png')} style={styles.scan}/>
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">Follow the arrow to scan card</Text>
-          </View>
+        </View>
+        
+        <View style={styles.scanText}>
+          <Image source={require('../../../assets/Scan.png')} style={styles.scan}/>
+          <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">Follow the arrow to scan card</Text>
+        </View>
 
-          <View style={{marginTop: 50}}>
-            <ScanGlide />
-          </View>
-
-        </ScrollView>
+        <View style={{marginTop: 50}} {...panResponder.panHandlers}>
+          <ScanGlide />
+        </View>
       </ImageBackground>
     </View>
   );
@@ -50,7 +64,7 @@ export default function Welcome() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -60,6 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
+    alignItems: 'center',
   },
   logo: {
     marginTop: 30,
