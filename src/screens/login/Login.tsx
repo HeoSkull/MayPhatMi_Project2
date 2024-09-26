@@ -1,0 +1,103 @@
+import React, {useState} from 'react';
+import { Image, ImageBackground, StyleSheet, View, Text } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+
+import { RootStackParamList } from '../../navigator/RootNavigator';
+import { CustomFonts } from '../../shared/fonts';
+import ButtonClick from '../../components/button/buttonClick';
+import Title from '../../components/title/title';
+import { TextInput } from 'react-native-paper';
+type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+
+export default function Login() {
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSecure, setIsSecure] = useState(true);
+  const toggleSecureEntry = () => {
+    setIsSecure(!isSecure); // Toggle the state
+};
+  const loaded = CustomFonts();
+  if (!loaded)
+    return null;
+  return (
+    <View style={styles.container}>
+        <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
+            <View style={styles.content}>
+                <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+
+                <Title text='LOGIN'/>
+                <TextInput 
+                  style={styles.textInput}
+                  placeholder='Username'
+                  value={username}
+                  onChangeText={(text)=> setUsername(text)}
+                  underlineColor="transparent"
+                />
+                <View style={{margin: 20}}></View>
+                <TextInput 
+                  style={styles.textInput}
+                  placeholder='Password'
+                  value={password}
+                  onChangeText={(text)=> setPassword(text)}
+                  underlineColor="transparent"
+                  secureTextEntry={isSecure}
+                  right={<TextInput.Icon icon={isSecure? "eye": "eye-outline"} onPress={toggleSecureEntry}/>}
+                />
+
+                <View style={{marginTop: 55}}>
+                  <ButtonClick text='Login' onClick={()=> navigation.navigate('Error')}/> 
+                </View> 
+            </View>
+        </ImageBackground>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {  
+    alignItems: 'center',
+  },
+  bgImage: {
+    width: '100%',
+    height: '100%',
+  },
+  logo: {
+    marginTop: 30,
+    width: 100,
+    height: 80
+  },
+  img: {
+    width: 290,
+    height: 335,
+    marginRight: 10
+  },
+  text1: {
+    color: '#C71A1A',
+    fontFamily: 'PaytoneOne',
+    fontWeight: 800,
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 20
+  },
+  text2: {
+    color: '#F8C135',
+    fontFamily: 'MPlus1',
+    fontWeight: 800,
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 20
+  },
+  textInput: {
+    borderWidth: 1, 
+    borderColor: 'white',
+    fontSize: 14, 
+    color: '#333', 
+    width: '80%',
+  },
+});
+

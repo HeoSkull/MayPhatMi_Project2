@@ -36,7 +36,7 @@ export default function OutOfNoodles() {
                 <Title text='OUT OF NOODLES'/>
 
                 <Text style={styles.text}>There is 
-                  <Text style={{color:'white'}}>0</Text> 
+                  <Text style={{color:'white'}}> 0 </Text> 
                   cup of noodles left in the machine. Please fill in to continue.
                 </Text>
 

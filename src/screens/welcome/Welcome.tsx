@@ -23,7 +23,7 @@ export default function Welcome() {
     onStartShouldSetPanResponder: (e, gestureState) => { return true; },
     onPanResponderEnd: (e, gestureState) => {
       if (recognizeDrag(gestureState) === 1) {
-        navigation.navigate('Error')
+        navigation.navigate('Login')
       }
       return true;
     }

@@ -5,6 +5,7 @@ import Information from '../screens/information/Info';
 import Error from '../screens/error/Error';
 import OutOfNoodles from '../screens/outOfNoodle/OutOfNoodle';
 import Done from '../screens/done/Done';
+import Login from '../screens/login/Login';
 
 export type RootStackParamList = {
   'Welcome': undefined;
@@ -12,6 +13,7 @@ export type RootStackParamList = {
   'Error': undefined;
   'OutOfNoodles': undefined;
   'Done': undefined;
+  'Login': undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -24,6 +26,7 @@ export default function RootNavigator() {
       <Stack.Screen name="Information" component={Information} />
       <Stack.Screen name="Done" component={Done} />
       <Stack.Screen name="OutOfNoodles" component={OutOfNoodles} />
+      <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>
   );
 }
