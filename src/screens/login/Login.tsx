@@ -16,7 +16,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [isSecure, setIsSecure] = useState(true);
   const toggleSecureEntry = () => {
-    setIsSecure(!isSecure); // Toggle the state
+    setIsSecure(!isSecure);
 };
   const loaded = CustomFonts();
   if (!loaded)
@@ -47,7 +47,7 @@ export default function Login() {
                 />
 
                 <View style={{marginTop: 55}}>
-                  <ButtonClick text='Login' onClick={()=> navigation.navigate('Error')}/> 
+                  <ButtonClick text='Login' onClick={()=> navigation.navigate('Information')}/> 
                 </View> 
             </View>
         </ImageBackground>
@@ -93,9 +93,6 @@ const styles = StyleSheet.create({
     margin: 20
   },
   textInput: {
-    borderWidth: 1, 
-    borderColor: 'white',
-    fontSize: 14, 
     color: '#333', 
     width: '80%',
   },

@@ -1,4 +1,6 @@
-import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { CustomFonts } from "../../shared/fonts";
 
 type ButtonProps  = {
     text?: string;
@@ -6,10 +8,12 @@ type ButtonProps  = {
 }
 
 export default function ButtonClick({text, onClick}: ButtonProps) {
+    const loaded = CustomFonts();
+    if (!loaded) return null;
     return (
-        <TouchableOpacity style={styles.button} onPress={onClick}>
-                <Text style={styles.text}>{text}</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={onClick} >
+                    <Text style={styles.text}>{text}</Text>
+            </TouchableOpacity>
     )
 }
 
@@ -29,6 +33,7 @@ const styles = StyleSheet.create({
         elevation: 5, 
     },
     text: {
+        fontFamily: 'PaytoneOne',
         color: '#A31616', 
         fontSize: 18, 
         fontWeight: 'bold',

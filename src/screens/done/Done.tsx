@@ -37,15 +37,15 @@ export default function Done() {
 
                 <Image source={require('../../../assets/done.png')} style={styles.img}/>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={styles.text1}>Enjoy your noodles </Text>
+                  <Text style={styles.text}>Enjoy your noodles </Text>
                   <Image source={require('../../../assets/like_done.png')} style={{height: 40, width: 40}}/>
                 </View>
 
-                <View style={{marginTop: 55}}>
-                  <ButtonClick text='Back to home' onClick={()=> navigation.navigate('Welcome')}/> 
+                <View style={{marginTop: 15}}>
+                  <ButtonClick text='Back to home' onClick={()=> navigation.navigate('Information')}/> 
                 </View> 
                 <View style={{flexDirection: 'column', alignItems: 'center', marginTop: 10}} {...panResponder.panHandlers}>
-                  <Text style={[styles.text2]}>Get them below </Text>
+                  <Text style={[styles.textUnderButton]}>Get them below </Text>
                   <Image source={require('../../../assets/ArrowDownGesture.png')} style={{height: 40, width: 20}}/>
                 </View>
             </View>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     height: 335,
     marginRight: 10
   },
-  text1: {
+  text: {
     color: '#C71A1A',
     fontFamily: 'PaytoneOne',
     fontWeight: 800,
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 20
   },
-  text2: {
+  textUnderButton: {
     color: '#F8C135',
     fontFamily: 'MPlus1',
     fontWeight: 800,

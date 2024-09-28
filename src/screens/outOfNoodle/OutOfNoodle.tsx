@@ -22,7 +22,7 @@ export default function OutOfNoodles() {
     onStartShouldSetPanResponder: (e, gestureState) => { return true; },
     onPanResponderEnd: (e, gestureState) => {
       if (recognizeDrag(gestureState) === 1) {
-        navigation.navigate('Welcome')
+        navigation.navigate('Information')
       }
       return true;
     }

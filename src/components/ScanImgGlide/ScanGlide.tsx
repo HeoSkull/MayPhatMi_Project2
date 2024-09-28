@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from "react-native";
 
 export default function ScanGlide() {
     return (
-        <View style={styles.GlideContainer}>
+        <View style={styles.glideContainer}>
             <View style={styles.placeholder} />
             <View style={styles.centerContent}>
                 <Image source={require('../../../assets/ScanGesture.png')} style={styles.img1}/>
@@ -13,7 +13,7 @@ export default function ScanGlide() {
 }
 
 const styles = StyleSheet.create({
-    GlideContainer: {
+    glideContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
