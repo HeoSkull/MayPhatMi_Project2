@@ -7,13 +7,13 @@ type ButtonProps  = {
     onClick?:() => void;
 }
 
-export default function ButtonClick({text, onClick}: ButtonProps) {
+export default function ButtonClick({text, onClick }: ButtonProps) {
     const loaded = CustomFonts();
     if (!loaded) return null;
     return (
-            <TouchableOpacity style={styles.button} onPress={onClick} >
-                    <Text style={styles.text}>{text}</Text>
-            </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onClick} >
+            <Text style={styles.text}>{text}</Text>
+        </TouchableOpacity>
     )
 }
 

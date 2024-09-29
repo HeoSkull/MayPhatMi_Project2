@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, View, Image, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -8,11 +8,31 @@ import { RootStackParamList } from '../../navigator/RootNavigator';
 import { CustomFonts } from '../../shared/fonts';
 import CardInfo from './components/Card';
 import ButtonClick from '../../components/button/buttonClick';
+import NoodleCount from './components/NoodleCount';
 type InformationScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Information'>;
 export default function Information() {
   const loaded = CustomFonts();
   if (!loaded) return null;
   const navigation = useNavigation<InformationScreenNavigationProp>();
+
+  const [noodleCount, setNoodleCount] = useState(3); 
+
+  const handleNoodleClick = () => {
+    if (noodleCount > 0) {
+      setNoodleCount(noodleCount - 1); 
+      navigation.navigate('Done');
+    } 
+    if (noodleCount == 0) navigation.navigate('OutOfNoodles')
+  };
+
+  const noodleImages = [
+    [require('../../../assets/info1.png'), require('../../../assets/info2.png'), require('../../../assets/info3.png')],
+    [require('../../../assets/info1.png'), require('../../../assets/info2.png'), require('../../../assets/unavaiableNoodle.png')],
+    [require('../../../assets/info1.png'), require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png')],
+    [require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png')]
+  ];
+  const currentNoodles = noodleImages[3 - noodleCount];
+  
   return (
     <View style={styles.container}>
         <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
@@ -29,23 +49,23 @@ export default function Information() {
                 />
 
                 <View style={{flexDirection: 'row'}}>
-                  <Image source={require('../../../assets/info1.png')} style={styles.img}/>
-                  <Image source={require('../../../assets/info2.png')} style={styles.img}/>
-                  <Image source={require('../../../assets/info3.png')} style={styles.img}/>
+                  {currentNoodles.map((img, index) => (
+                    <NoodleCount 
+                      key={index} 
+                      img={img} 
+                      text={img === require('../../../assets/unavaiableNoodle.png') ? 'Unvailable' : undefined}  />
+                  ))}
                 </View>
 
-                <View style={{marginVertical: 10}}>
-                  <Text style={styles.text}>
-                    <Text style={{color:'#D91313'}}>3 </Text> cups of  noodles left this month
-                  </Text>
-                </View>
-
-
-                <View style={{marginTop: 10}}></View>
+                <Text style={styles.text}>
+                  <Text style={{color:'#D91313'}}>{noodleCount} </Text> cups of  noodles left this month
+                </Text>
+   
+                <View style={{marginTop: 10}} />
 
                 <ButtonClick  
-                  text='Get your noodles'
-                  onClick={()=> navigation.navigate('Done')}
+                  text={noodleCount > 0 ? 'Get your noodles' : 'Come back next month'} 
+                  onClick={handleNoodleClick} 
                 />
             </View>
         </ImageBackground>
