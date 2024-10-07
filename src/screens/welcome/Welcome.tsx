@@ -1,5 +1,5 @@
-import React from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, View, Text, PanResponder } from 'react-native';
+import React, { useState } from 'react';
+import { Image, ImageBackground, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -8,35 +8,32 @@ import { RootStackParamList } from '../../navigator/RootNavigator';
 import { CustomFonts } from '../../shared/fonts';
 import Title from '../../components/title/title';
 import ScanGlide from '../../components/ScanImgGlide/ScanGlide';
+import usePanResponder from '../../shared/usePanResponder';
 type WelcomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
 
 export default function Welcome() {
   const navigation = useNavigation<WelcomeScreenNavigationProp>();
+
+  const [isLoading, setIsLoading] = useState(true);
+
   const loaded = CustomFonts();
-  if (!loaded)
-    return null;
-  const recognizeDrag = ({ dx }: { dx: number }) => {
-    if (dx > 200) return 1; // left to right
-    return 0;
-  };
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => { return true; },
-    onPanResponderEnd: (e, gestureState) => {
-      if (recognizeDrag(gestureState) === 1) {
-        navigation.navigate('Login')
-      }
-      return true;
-    }
-  });
+  if (!loaded) return null;
+
+  const panResponder = usePanResponder(navigation, 'Error')
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
+      <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage} >
         <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
 
         <Title text='WELCOME'/>
-
+        
         <View style={[styles.outerBorder, styles.shadowBox]}>
           <View style={styles.innerBorder}>
+            {isLoading && (              
+              <View style={styles.loadingIndicator}>
+                <ActivityIndicator size="large" color="black" />
+              </View>
+            )}
             <Video 
               source={require('../../../assets/welcome_video.mp4')}
               rate={1.0}
@@ -45,6 +42,7 @@ export default function Welcome() {
               isLooping={true} 
               resizeMode={ResizeMode.CONTAIN}
               style={styles.video}
+              onLoad={()=> setIsLoading(false)}
             />
           </View>
         </View>
@@ -95,6 +93,21 @@ const styles = StyleSheet.create({
     borderColor: '#FFC900', 
     borderWidth: 3,
     borderRadius: 12,
+  },
+  fullScreenIndicator: {
+    position: 'absolute', // Position it absolutely
+    top: 0, // Cover the entire screen
+    left: 0, // Cover the entire screen
+    right: 0, // Cover the entire screen
+    bottom: 0, // Cover the entire screen
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
+  },
+  loadingIndicator: {
+    position: 'absolute', 
+    top: '50%',
+    left: '50%', 
+    transform: [{ translateX: -20 }, { translateY: -15 }], 
   },
   shadowBox: {
     shadowColor: '#550A0A',

@@ -6,7 +6,7 @@ type NoodleCountProps = {
     text?: string
 }
 
-export default function  NoodleCount({img, text}:NoodleCountProps) {
+export default function  NoodleCount({ img, text }:NoodleCountProps) {
     const loaded = CustomFonts();
     if (!loaded) return null;
     return (

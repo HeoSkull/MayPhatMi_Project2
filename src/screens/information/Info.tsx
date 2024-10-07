@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImageBackground, StyleSheet, View, Image, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { updateDoc, doc, getDoc } from 'firebase/firestore';
+
 
 import Title from '../../components/title/title';
 import { RootStackParamList } from '../../navigator/RootNavigator';
@@ -9,30 +11,82 @@ import { CustomFonts } from '../../shared/fonts';
 import CardInfo from './components/Card';
 import ButtonClick from '../../components/button/buttonClick';
 import NoodleCount from './components/NoodleCount';
+import {db,auth} from '../../db/db';
+import { signOut } from 'firebase/auth';
+
 type InformationScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Information'>;
+
 export default function Information() {
   const loaded = CustomFonts();
   if (!loaded) return null;
   const navigation = useNavigation<InformationScreenNavigationProp>();
+  const [noodleCount, setNoodleCount] = useState<number | undefined>(undefined); 
+  const [userDetail, setUserDetail] = useState<UserDetail | null>(null);;
 
-  const [noodleCount, setNoodleCount] = useState(3); 
-
-  const handleNoodleClick = () => {
-    if (noodleCount > 0) {
-      setNoodleCount(noodleCount - 1); 
-      navigation.navigate('Done');
-    } 
-    if (noodleCount == 0) navigation.navigate('OutOfNoodles')
+  type UserDetail = {
+    name?: string;
+    birthday?: string;
+    gender?: string;
+    department?: string;
+    noodleCount?: number;
   };
-
   const noodleImages = [
     [require('../../../assets/info1.png'), require('../../../assets/info2.png'), require('../../../assets/info3.png')],
     [require('../../../assets/info1.png'), require('../../../assets/info2.png'), require('../../../assets/unavaiableNoodle.png')],
     [require('../../../assets/info1.png'), require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png')],
     [require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png')]
   ];
-  const currentNoodles = noodleImages[3 - noodleCount];
+  const currentNoodles = noodleImages[3 - (noodleCount ?? 0)];
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        console.log(user);
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data() as UserDetail;
+          setUserDetail(userData);
+          setNoodleCount(userData.noodleCount); // Set noodleCount from userDetail
+          console.log(userData); // Log user data only once
+        } else {
+          console.log('No document exists');
+        }
+      } else {
+        console.log('No user is logged in');
+      }
+    });
   
+    // Cleanup the listener on component unmount
+    return () => unsubscribe();
+  }, []);
+
+
+  const handleNoodleClick = async () => {
+    if (noodleCount && noodleCount > 0) {
+      const newNoodleCount = noodleCount - 1; 
+      setNoodleCount(newNoodleCount); 
+  
+      const user = auth.currentUser; 
+      if (user) {
+        const docRef = doc(db, 'users', user.uid); 
+        await updateDoc(docRef, { noodleCount: newNoodleCount }); 
+      }
+  
+      navigation.navigate('Done'); 
+    } 
+    if (noodleCount === 0) navigation.navigate('OutOfNoodles'); 
+  };
+  
+  const handleLogOut = async() => {
+    try { 
+      await auth.signOut();
+      navigation.navigate('Login');
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  }
   return (
     <View style={styles.container}>
         <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
@@ -42,10 +96,10 @@ export default function Information() {
                 <Title text='INFORMATION'/>
 
                 <CardInfo 
-                  fullname='Alice Mie'
-                  birthday='12/10/1999'
-                  gender='Female'
-                  department='Design'
+                  fullname= {userDetail?.name}
+                  birthday={userDetail?.birthday}
+                  gender={userDetail?.gender}
+                  department={userDetail?.department}
                 />
 
                 <View style={{flexDirection: 'row'}}>
@@ -64,8 +118,13 @@ export default function Information() {
                 <View style={{marginTop: 10}} />
 
                 <ButtonClick  
-                  text={noodleCount > 0 ? 'Get your noodles' : 'Come back next month'} 
+                  text={(noodleCount && noodleCount > 0) ? 'Get your noodles' : 'Come back next month'} 
                   onClick={handleNoodleClick} 
+                />
+                <View style={{paddingTop: 10}}></View>
+                <ButtonClick 
+                  text='Log out'
+                  onClick={handleLogOut}
                 />
             </View>
         </ImageBackground>

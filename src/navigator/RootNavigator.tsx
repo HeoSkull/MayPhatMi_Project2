@@ -23,10 +23,10 @@ export default function RootNavigator() {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Error" component={Error} />
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Information" component={Information} />
       <Stack.Screen name="Done" component={Done} />
       <Stack.Screen name="OutOfNoodles" component={OutOfNoodles} />
-      <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>
   );
 }

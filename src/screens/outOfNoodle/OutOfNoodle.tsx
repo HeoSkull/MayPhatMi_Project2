@@ -1,11 +1,12 @@
 import React from 'react';
-import { Image, ImageBackground, StyleSheet, View, Text, PanResponder } from 'react-native';
+import { Image, ImageBackground, StyleSheet, View, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 import Title from '../../components/title/title';
 import { CustomFonts } from '../../shared/fonts';
 import { RootStackParamList } from '../../navigator/RootNavigator';
+import usePanResponder from '../../shared/usePanResponder';
 
 type OutOfNoodleScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'OutOfNoodles'>;
 
@@ -14,19 +15,8 @@ export default function OutOfNoodles() {
   const loaded = CustomFonts();
   if (!loaded)
     return null;
-  const recognizeDrag = ({ dx }: { dx: number }) => {
-    if (dx > 200) return 1; // left to right
-    return 0;
-  };
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => { return true; },
-    onPanResponderEnd: (e, gestureState) => {
-      if (recognizeDrag(gestureState) === 1) {
-        navigation.navigate('Information')
-      }
-      return true;
-    }
-  });
+
+  const panResponder = usePanResponder(navigation, 'Information')
   return (
     <View style={styles.container} {...panResponder.panHandlers}>
         <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>

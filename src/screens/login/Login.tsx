@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Image, ImageBackground, StyleSheet, View, Text } from 'react-native';
+import { Image, ImageBackground, StyleSheet, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -8,19 +8,33 @@ import { CustomFonts } from '../../shared/fonts';
 import ButtonClick from '../../components/button/buttonClick';
 import Title from '../../components/title/title';
 import { TextInput } from 'react-native-paper';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../db/db';
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 export default function Login() {
   const navigation = useNavigation<LoginScreenNavigationProp>();
-  const [username, setUsername] = useState('');
+  const loaded = CustomFonts();
+  if (!loaded) return null;
+
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSecure, setIsSecure] = useState(true);
+
   const toggleSecureEntry = () => {
     setIsSecure(!isSecure);
-};
-  const loaded = CustomFonts();
-  if (!loaded)
-    return null;
+  };
+
+  const handleLogin = async() => {
+    try {
+      await signInWithEmailAndPassword(auth,email,password)
+      console.log("User login thành công");
+      navigation.navigate('Information');
+    } catch (error) {
+      console.log(error);
+      alert('wrong email/password')
+    }
+  }
   return (
     <View style={styles.container}>
         <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
@@ -30,10 +44,11 @@ export default function Login() {
                 <Title text='LOGIN'/>
                 <TextInput 
                   style={styles.textInput}
-                  placeholder='Username'
-                  value={username}
-                  onChangeText={(text)=> setUsername(text)}
+                  placeholder='Email'
+                  value={email}
+                  onChangeText={(text)=> setEmail(text)}
                   underlineColor="transparent"
+                  left={<TextInput.Icon icon={'account'}/>}
                 />
                 <View style={{margin: 20}}></View>
                 <TextInput 
@@ -43,11 +58,12 @@ export default function Login() {
                   onChangeText={(text)=> setPassword(text)}
                   underlineColor="transparent"
                   secureTextEntry={isSecure}
+                  left={<TextInput.Icon icon={'key'}/>}
                   right={<TextInput.Icon icon={isSecure? "eye": "eye-outline"} onPress={toggleSecureEntry}/>}
                 />
 
                 <View style={{marginTop: 55}}>
-                  <ButtonClick text='Login' onClick={()=> navigation.navigate('Information')}/> 
+                  <ButtonClick text='Login' onClick={handleLogin}/> 
                 </View> 
             </View>
         </ImageBackground>
@@ -93,7 +109,6 @@ const styles = StyleSheet.create({
     margin: 20
   },
   textInput: {
-    color: '#333', 
     width: '80%',
   },
 });

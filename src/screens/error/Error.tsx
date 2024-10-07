@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, ImageBackground, ScrollView, Text, TouchableOpacity, PanResponder } from 'react-native';
+import { StyleSheet, View, Image, ImageBackground, Text, TouchableOpacity } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import Title from '../../components/title/title';
@@ -7,27 +7,17 @@ import { RootStackParamList } from '../../navigator/RootNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { CustomFonts } from '../../shared/fonts';
 import ScanGlide from '../../components/ScanImgGlide/ScanGlide';
+import usePanResponder from '../../shared/usePanResponder';
 
 type ErrorScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Error'>;
 
 export default function Error() {
   const navigation = useNavigation<ErrorScreenNavigationProp>();
+
   const loaded = CustomFonts();
-  if (!loaded)
-    return null;
-  const recognizeDrag = ({ dx }: { dx: number }) => {
-    if (dx > 200) return 1; // left to right
-    return 0;
-  };
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => { return true; },
-    onPanResponderEnd: (e, gestureState) => {
-      if (recognizeDrag(gestureState) === 1) {
-        navigation.navigate('Done')
-      }
-      return true;
-    }
-  });
+  if (!loaded) return null;
+
+  const panResponder = usePanResponder(navigation, 'Login')
   return (
     <View style={styles.container}>
       <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
@@ -37,7 +27,7 @@ export default function Error() {
         
         <Text style={ styles.text}>Can not recongnize your ID card. </Text>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
           <Text style={[styles.text, {color: '#FFFFFF', fontSize: 18}]}>Please scan again.</Text>
         </TouchableOpacity>
 

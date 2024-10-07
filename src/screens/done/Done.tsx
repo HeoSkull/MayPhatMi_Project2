@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, View, Text, PanResponder } from 'react-native';
+import { Image, ImageBackground, StyleSheet, View, Text, PanResponder } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -11,9 +11,10 @@ type DoneScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'D
 
 export default function Done() {
   const navigation = useNavigation<DoneScreenNavigationProp>();
+
   const loaded = CustomFonts();
-  if (!loaded)
-    return null;
+  if (!loaded) return null;
+
   const recognizeDrag = ({ dy }: { dy: number }) => {
     if (dy > 50) return 1; // left to right
     return 0;
@@ -22,7 +23,7 @@ export default function Done() {
     onStartShouldSetPanResponder: (e, gestureState) => { return true; },
     onPanResponderEnd: (e, gestureState) => {
       if (recognizeDrag(gestureState) === 1) {
-        navigation.navigate('OutOfNoodles')
+        navigation.navigate('Information')
       }
       return true;
     }
