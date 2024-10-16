@@ -9,7 +9,7 @@ import ButtonClick from '../../components/button/buttonClick';
 import Title from '../../components/title/title';
 import { TextInput } from 'react-native-paper';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../db/db';
+import { auth } from '../../../services/db';
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 export default function Login() {

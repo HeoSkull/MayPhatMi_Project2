@@ -5,7 +5,7 @@ import { updateDoc, doc, getDoc } from 'firebase/firestore';
 
 import { setUserDetail, setNoodleCount } from "../redux/reducer/user.slice";
 import { StoreState } from "../redux/store";
-import { auth,db } from '../db/db'; 
+import { auth,db } from '../../services/db'; 
 
 type UserProps = {
     user: {
