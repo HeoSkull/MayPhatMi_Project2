@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Image, ImageBackground, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Image, ImageBackground, StyleSheet, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -14,12 +14,14 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, '
 
 export default function Login() {
   const navigation = useNavigation<LoginScreenNavigationProp>();
+
   const loaded = CustomFonts();
   if (!loaded) return null;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSecure, setIsSecure] = useState(true);
+  const [isImageLoading, setIsImageLoading] = useState(true); 
 
   const toggleSecureEntry = () => {
     setIsSecure(!isSecure);
@@ -37,35 +39,48 @@ export default function Login() {
   }
   return (
     <View style={styles.container}>
-        <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
-            <View style={styles.content}>
-                <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
-
-                <Title text='LOGIN'/>
-                <TextInput 
-                  style={styles.textInput}
-                  placeholder='Email'
-                  value={email}
-                  onChangeText={(text)=> setEmail(text)}
-                  underlineColor="transparent"
-                  left={<TextInput.Icon icon={'account'}/>}
-                />
-                <View style={{margin: 20}}></View>
-                <TextInput 
-                  style={styles.textInput}
-                  placeholder='Password'
-                  value={password}
-                  onChangeText={(text)=> setPassword(text)}
-                  underlineColor="transparent"
-                  secureTextEntry={isSecure}
-                  left={<TextInput.Icon icon={'key'}/>}
-                  right={<TextInput.Icon icon={isSecure? "eye": "eye-outline"} onPress={toggleSecureEntry}/>}
-                />
-
-                <View style={{marginTop: 55}}>
-                  <ButtonClick text='Login' onClick={handleLogin}/> 
-                </View> 
+      <ImageBackground 
+        source={require('../../../assets/bg.png')} 
+        style={styles.bgImage}
+        onLoadStart={() => setIsImageLoading(true)} 
+        onLoadEnd={() => setIsImageLoading(false)} 
+      >
+        {isImageLoading ? ( 
+            <View style={styles.fullScreenIndicator}>
+              <ActivityIndicator size="large" color="black" />
             </View>
+          ) : (
+            <>
+              <View style={styles.content}>
+                  <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+
+                  <Title text='LOGIN'/>
+                  <TextInput 
+                    style={styles.textInput}
+                    placeholder='Email'
+                    value={email}
+                    onChangeText={(text)=> setEmail(text)}
+                    underlineColor="transparent"
+                    left={<TextInput.Icon icon={'account'}/>}
+                  />
+                  <View style={{margin: 20}}></View>
+                  <TextInput 
+                    style={styles.textInput}
+                    placeholder='Password'
+                    value={password}
+                    onChangeText={(text)=> setPassword(text)}
+                    underlineColor="transparent"
+                    secureTextEntry={isSecure}
+                    left={<TextInput.Icon icon={'key'}/>}
+                    right={<TextInput.Icon icon={isSecure? "eye": "eye-outline"} onPress={toggleSecureEntry}/>}
+                  />
+
+                  <View style={{marginTop: 55}}>
+                    <ButtonClick text='Login' onClick={handleLogin}/> 
+                  </View> 
+              </View>
+            </>
+          )}
         </ImageBackground>
     </View>
   );
@@ -110,6 +125,15 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '80%',
+  },
+  fullScreenIndicator: {
+    position: 'absolute', 
+    top: 0,
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
   },
 });
 

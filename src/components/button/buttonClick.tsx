@@ -1,5 +1,4 @@
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet, TouchableOpacity, Text, Image, View } from "react-native";
 import { CustomFonts } from "../../shared/fonts";
 
 type ButtonProps  = {
@@ -11,31 +10,32 @@ export default function ButtonClick({text, onClick }: ButtonProps) {
     const loaded = CustomFonts();
     if (!loaded) return null;
     return (
-        <TouchableOpacity style={styles.button} onPress={onClick} >
-            <Text style={styles.text}>{text}</Text>
+        <TouchableOpacity onPress={onClick} >
+            <View style={styles.container}>
+                <Image source ={require('../../../assets/Button.png')} style={styles.buttonImg} />
+                <Text style={styles.text}>{text}</Text>
+            </View>
+
         </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
-    button: {
-        backgroundColor: '#FFB906',
-        borderRadius: 30, 
-        paddingVertical: 15, 
-        paddingHorizontal: 60, 
-        shadowColor: '#FFFFFF', 
-        shadowOffset: { 
-            width: 4, 
-            height: 4 
-        }, 
-        shadowOpacity: 1, 
-        shadowRadius: 0, 
-        elevation: 5, 
+    container: {
+        position: 'relative', 
+        alignItems: 'center', 
+        justifyContent: 'center'
+    },
+    buttonImg: {
+        width: 300,
+        resizeMode: 'contain',
     },
     text: {
         fontFamily: 'PaytoneOne',
         color: '#A31616', 
         fontSize: 18, 
         fontWeight: 'bold',
+        position: 'absolute',
+        textAlign: 'center'
     },
 })

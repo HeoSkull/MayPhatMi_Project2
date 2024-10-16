@@ -1,14 +1,24 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
 
 import RootNavigator from './src/navigator/RootNavigator';
+import { store } from './src/redux/store';
+import { PaperProvider } from 'react-native-paper';
+import { UserProvider } from './src/hook/userProvider';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootNavigator />
-    </NavigationContainer>
+    <Provider store={store}>
+      <PaperProvider>
+        <NavigationContainer>
+          <UserProvider>
+            <RootNavigator />
+          </UserProvider>
+        </NavigationContainer>
+      </PaperProvider>
+    </Provider>
+
   );
 }
 

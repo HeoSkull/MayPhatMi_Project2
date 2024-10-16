@@ -1,5 +1,5 @@
-import React from 'react';
-import { Image, ImageBackground, StyleSheet, View, Text, PanResponder } from 'react-native';
+import React, { useState } from 'react';
+import { Image, ImageBackground, StyleSheet, View, Text, PanResponder, ActivityIndicator } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -11,6 +11,7 @@ type DoneScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'D
 
 export default function Done() {
   const navigation = useNavigation<DoneScreenNavigationProp>();
+  const [isImageLoading, setIsImageLoading] = useState(true); 
 
   const loaded = CustomFonts();
   if (!loaded) return null;
@@ -30,26 +31,39 @@ export default function Done() {
   });
   return (
     <View style={styles.container}>
-        <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
-            <View style={styles.content}>
-                <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
-
-                <Title text='DONE'/>
-
-                <Image source={require('../../../assets/done.png')} style={styles.img}/>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={styles.text}>Enjoy your noodles </Text>
-                  <Image source={require('../../../assets/like_done.png')} style={{height: 40, width: 40}}/>
-                </View>
-
-                <View style={{marginTop: 15}}>
-                  <ButtonClick text='Back to home' onClick={()=> navigation.navigate('Information')}/> 
-                </View> 
-                <View style={{flexDirection: 'column', alignItems: 'center', marginTop: 10}} {...panResponder.panHandlers}>
-                  <Text style={[styles.textUnderButton]}>Get them below </Text>
-                  <Image source={require('../../../assets/ArrowDownGesture.png')} style={{height: 40, width: 20}}/>
-                </View>
+      <ImageBackground 
+        source={require('../../../assets/bg.png')} 
+        style={styles.bgImage}
+        onLoadStart={() => setIsImageLoading(true)} 
+        onLoadEnd={() => setIsImageLoading(false)} 
+      >
+        {isImageLoading ? ( 
+            <View style={styles.fullScreenIndicator}>
+              <ActivityIndicator size="large" color="black" />
             </View>
+          ) : (
+            <>
+              <View style={styles.content}>
+                  <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+
+                  <Title text='DONE'/>
+
+                  <Image source={require('../../../assets/done.png')} style={styles.img}/>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={styles.text}>Enjoy your noodles </Text>
+                    <Image source={require('../../../assets/like_done.png')} style={{height: 40, width: 40}}/>
+                  </View>
+
+                  <View style={{marginTop: 15}}>
+                    <ButtonClick text='Back to home' onClick={()=> navigation.navigate('Information')}/> 
+                  </View> 
+                  <View style={{flexDirection: 'column', alignItems: 'center', marginTop: 10}} {...panResponder.panHandlers}>
+                    <Text style={[styles.textUnderButton]}>Get them below </Text>
+                    <Image source={require('../../../assets/ArrowDownGesture.png')} style={{height: 40, width: 20}}/>
+                  </View>
+              </View>
+            </>
+          )}
         </ImageBackground>
     </View>
   );
@@ -91,6 +105,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 20
-  }
+  },
+  fullScreenIndicator: {
+    position: 'absolute', 
+    top: 0,
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+  },
 });
 

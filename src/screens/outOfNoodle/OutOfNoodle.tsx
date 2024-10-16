@@ -1,5 +1,5 @@
-import React from 'react';
-import { Image, ImageBackground, StyleSheet, View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { Image, ImageBackground, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,6 +12,8 @@ type OutOfNoodleScreenNavigationProp = NativeStackNavigationProp<RootStackParamL
 
 export default function OutOfNoodles() {
   const navigation = useNavigation<OutOfNoodleScreenNavigationProp>();
+  const [isImageLoading, setIsImageLoading] = useState(true); 
+
   const loaded = CustomFonts();
   if (!loaded)
     return null;
@@ -19,19 +21,32 @@ export default function OutOfNoodles() {
   const panResponder = usePanResponder(navigation, 'Information')
   return (
     <View style={styles.container} {...panResponder.panHandlers}>
-        <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
-            <View style={styles.content}>
-                <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
-
-                <Title text='OUT OF NOODLES'/>
-
-                <Text style={styles.text}>There is 
-                  <Text style={{color:'white'}}> 0 </Text> 
-                  cup of noodles left in the machine. Please fill in to continue.
-                </Text>
-
-                <Image source={require('../../../assets/outOfNoodle.png')} style={styles.img}/>
+      <ImageBackground 
+        source={require('../../../assets/bg.png')} 
+        style={styles.bgImage}
+        onLoadStart={() => setIsImageLoading(true)} 
+        onLoadEnd={() => setIsImageLoading(false)} 
+      >
+        {isImageLoading ? ( 
+            <View style={styles.fullScreenIndicator}>
+              <ActivityIndicator size="large" color="black" />
             </View>
+          ) : (
+            <>
+              <View style={styles.content}>
+                  <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+
+                  <Title text='OUT OF NOODLES'/>
+
+                  <Text style={styles.text}>There is 
+                    <Text style={{color:'white'}}> 0 </Text> 
+                    cup of noodles left in the machine. Please fill in to continue.
+                  </Text>
+
+                  <Image source={require('../../../assets/outOfNoodle.png')} style={styles.img}/>
+              </View>
+            </>
+          )}
         </ImageBackground>
     </View>
   );
@@ -65,6 +80,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 20
-  }
+  },
+  fullScreenIndicator: {
+    position: 'absolute', 
+    top: 0,
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+  },
 });
 

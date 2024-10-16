@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View, Image, ImageBackground, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Image, ImageBackground, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import Title from '../../components/title/title';
@@ -13,6 +13,7 @@ type ErrorScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, '
 
 export default function Error() {
   const navigation = useNavigation<ErrorScreenNavigationProp>();
+  const [isImageLoading, setIsImageLoading] = useState(true); 
 
   const loaded = CustomFonts();
   if (!loaded) return null;
@@ -20,7 +21,18 @@ export default function Error() {
   const panResponder = usePanResponder(navigation, 'Login')
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage}>
+      <ImageBackground 
+        source={require('../../../assets/bg.png')} 
+        style={styles.bgImage}
+        onLoadStart={() => setIsImageLoading(true)} 
+        onLoadEnd={() => setIsImageLoading(false)} 
+      >        
+      {isImageLoading ? ( 
+        <View style={styles.fullScreenIndicator}>
+          <ActivityIndicator size="large" color="black" />
+        </View>
+      ) : (
+        <>
         <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
 
         <Title text='ERROR'/>
@@ -41,6 +53,8 @@ export default function Error() {
         <View style={{marginTop: 40}} {...panResponder.panHandlers}>
           <ScanGlide />
         </View>
+        </>
+    )}
       </ImageBackground>
     </View>
   );
@@ -86,6 +100,15 @@ const styles = StyleSheet.create({
     fontWeight: 800,
     fontSize: 20,
     lineHeight: 65.47
-  }
+  },
+  fullScreenIndicator: {
+    position: 'absolute', 
+    top: 0,
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+  },
 });
 

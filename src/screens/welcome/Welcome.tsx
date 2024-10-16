@@ -15,6 +15,7 @@ export default function Welcome() {
   const navigation = useNavigation<WelcomeScreenNavigationProp>();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isImageLoading, setIsImageLoading] = useState(true); 
 
   const loaded = CustomFonts();
   if (!loaded) return null;
@@ -22,39 +23,51 @@ export default function Welcome() {
   const panResponder = usePanResponder(navigation, 'Error')
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../../../assets/bg.png')} style={styles.bgImage} >
-        <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
-
-        <Title text='WELCOME'/>
-        
-        <View style={[styles.outerBorder, styles.shadowBox]}>
-          <View style={styles.innerBorder}>
-            {isLoading && (              
-              <View style={styles.loadingIndicator}>
-                <ActivityIndicator size="large" color="black" />
+      <ImageBackground 
+        source={require('../../../assets/bg.png')} 
+        style={styles.bgImage}
+        onLoadStart={() => setIsImageLoading(true)} 
+        onLoadEnd={() => setIsImageLoading(false)} 
+      >
+        {isImageLoading ? ( 
+            <View style={styles.fullScreenIndicator}>
+              <ActivityIndicator size="large" color="black" />
+            </View>
+          ) : (
+            <>
+              <Image source={require('../../../assets/logo.png')} style={styles.logo} />
+              <Title text='WELCOME' />
+              
+              <View style={[styles.outerBorder, styles.shadowBox]}>
+                <View style={styles.innerBorder}>
+                  {isLoading && (              
+                    <View style={styles.loadingIndicator}>
+                      <ActivityIndicator size="large" color="black" />
+                    </View>
+                  )} 
+                  <Video 
+                    source={require('../../../assets/welcome_video.mp4')}
+                    rate={1.0}
+                    isMuted={false}
+                    shouldPlay={true} 
+                    isLooping={true} 
+                    resizeMode={ResizeMode.CONTAIN}
+                    style={styles.video}
+                    onLoad={() => setIsLoading(false)}
+                  />
+                </View>
               </View>
-            )}
-            <Video 
-              source={require('../../../assets/welcome_video.mp4')}
-              rate={1.0}
-              isMuted={false}
-              shouldPlay={true} 
-              isLooping={true} 
-              resizeMode={ResizeMode.CONTAIN}
-              style={styles.video}
-              onLoad={()=> setIsLoading(false)}
-            />
-          </View>
-        </View>
-        
-        <View style={styles.scanText}>
-          <Image source={require('../../../assets/Scan.png')} style={styles.scan}/>
-          <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">Follow the arrow to scan card</Text>
-        </View>
+              
+              <View style={styles.scanText}>
+                <Image source={require('../../../assets/Scan.png')} style={styles.scan} />
+                <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">Follow the arrow to scan card</Text>
+              </View>
 
-        <View style={{marginTop: 50}} {...panResponder.panHandlers}>
-          <ScanGlide />
-        </View>
+              <View style={{ marginTop: 50 }} {...panResponder.panHandlers}>
+                <ScanGlide />
+              </View>
+            </>
+        )}
       </ImageBackground>
     </View>
   );
@@ -95,13 +108,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   fullScreenIndicator: {
-    position: 'absolute', // Position it absolutely
-    top: 0, // Cover the entire screen
-    left: 0, // Cover the entire screen
-    right: 0, // Cover the entire screen
-    bottom: 0, // Cover the entire screen
-    justifyContent: 'center', // Center vertically
-    alignItems: 'center', // Center horizontally
+    position: 'absolute', 
+    top: 0,
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
   },
   loadingIndicator: {
     position: 'absolute', 
