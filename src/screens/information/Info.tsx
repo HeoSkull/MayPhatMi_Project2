@@ -8,6 +8,7 @@ import ButtonClick from '../../components/button/buttonClick';
 import NoodleCount from './components/NoodleCount';
 import { useUser } from '../../hook/userProvider';
 import { IconButton } from 'react-native-paper';
+import { logo, noodleImages, unavaiableNoodle } from '../../../img/img';
 
 
 export default function Information() {
@@ -18,12 +19,6 @@ export default function Information() {
 
   const [isImageLoading, setIsImageLoading] = useState(true); 
   
-  const noodleImages = [
-    [require('../../../assets/info1.png'), require('../../../assets/info2.png'), require('../../../assets/info3.png')],
-    [require('../../../assets/info1.png'), require('../../../assets/info2.png'), require('../../../assets/unavaiableNoodle.png')],
-    [require('../../../assets/info1.png'), require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png')],
-    [require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png'), require('../../../assets/unavaiableNoodle.png')]
-  ];
   const currentNoodles = noodleImages[3 - (user.noodleCount)];
 
   return (
@@ -44,7 +39,7 @@ export default function Information() {
 
                   <View style={styles.header}>
                     <View style={styles.logoContainer}>
-                      <Image source={require('../../../assets/logo.png')} style={styles.logo} />
+                      <Image source={logo} style={styles.logo} />
                     </View>
                     <IconButton icon="logout" size={30} iconColor='black' onPress={handleLogOut} />
                   </View>
@@ -63,7 +58,7 @@ export default function Information() {
                       <NoodleCount 
                         key={index} 
                         img={img} 
-                        text={img === require('../../../assets/unavaiableNoodle.png') ? 'Unvailable' : undefined}  />
+                        text={img === unavaiableNoodle ? 'Unvailable' : undefined}  />
                     ))}
                   </View>
 

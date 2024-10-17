@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableOpacity, Text, Image, View } from "react-native";
 import { CustomFonts } from "../../shared/fonts";
+import { button } from "../../../img/img";
 
 type ButtonProps  = {
     text?: string;
@@ -12,7 +13,9 @@ export default function ButtonClick({text, onClick }: ButtonProps) {
     return (
         <TouchableOpacity onPress={onClick} >
             <View style={styles.container}>
-                <Image source ={require('../../../assets/Button.png')} style={styles.buttonImg} />
+                <Image source={require('../../../assets/Button.png')} style={styles.buttonImg} />
+                <Image source={button} style={styles.buttonImg} />
+
                 <Text style={styles.text}>{text}</Text>
             </View>
 

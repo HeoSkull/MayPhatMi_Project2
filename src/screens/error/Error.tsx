@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { CustomFonts } from '../../shared/fonts';
 import ScanGlide from '../../components/ScanImgGlide/ScanGlide';
 import usePanResponder from '../../shared/usePanResponder';
+import { bg, error, logo, scan } from '../../../img/img';
 
 type ErrorScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Error'>;
 
@@ -22,7 +23,7 @@ export default function Error() {
   return (
     <View style={styles.container}>
       <ImageBackground 
-        source={require('../../../assets/bg.png')} 
+        source={bg} 
         style={styles.bgImage}
         onLoadStart={() => setIsImageLoading(true)} 
         onLoadEnd={() => setIsImageLoading(false)} 
@@ -33,20 +34,20 @@ export default function Error() {
         </View>
       ) : (
         <>
-        <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+        <Image source={logo} style={styles.logo}/>
 
         <Title text='ERROR'/>
         
-        <Text style={ styles.text}>Can not recongnize your ID card. </Text>
+        <Text style={styles.text}>Can not recongnize your ID card. </Text>
 
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
           <Text style={[styles.text, {color: '#FFFFFF', fontSize: 18}]}>Please scan again.</Text>
         </TouchableOpacity>
 
-        <Image source={require('../../../assets/error.png')} style={styles.img}/>
+        <Image source={error} style={styles.img}/>
 
         <View style={styles.scanText}>
-          <Image source={require('../../../assets/Scan.png')} style={styles.scan}/>
+          <Image source={scan} style={styles.scan}/>
           <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">Follow the arrow to scan card</Text>
         </View>
 

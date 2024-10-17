@@ -1,13 +1,14 @@
 import { Image, StyleSheet, View } from "react-native";
+import { arrowLeftGesture, scanGesture } from "../../../img/img";
 
 export default function ScanGlide() {
     return (
         <View style={styles.glideContainer}>
             <View style={styles.placeholder} />
             <View style={styles.centerContent}>
-                <Image source={require('../../../assets/ScanGesture.png')} style={styles.img1}/>
+                <Image source={scanGesture} style={styles.img1}/>
             </View>
-            <Image source={require('../../../assets/ArrowLeftGesture.png')} style={styles.img2}/>
+            <Image source={arrowLeftGesture} style={styles.img2}/>
         </View>
     )
 }

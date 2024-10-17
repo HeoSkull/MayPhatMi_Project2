@@ -9,6 +9,7 @@ import { CustomFonts } from '../../shared/fonts';
 import Title from '../../components/title/title';
 import ScanGlide from '../../components/ScanImgGlide/ScanGlide';
 import usePanResponder from '../../shared/usePanResponder';
+import { bg, logo, scan, video_welcome } from '../../../img/img';
 type WelcomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
 
 export default function Welcome() {
@@ -24,7 +25,7 @@ export default function Welcome() {
   return (
     <View style={styles.container}>
       <ImageBackground 
-        source={require('../../../assets/bg.png')} 
+        source={bg} 
         style={styles.bgImage}
         onLoadStart={() => setIsImageLoading(true)} 
         onLoadEnd={() => setIsImageLoading(false)} 
@@ -35,7 +36,7 @@ export default function Welcome() {
             </View>
           ) : (
             <>
-              <Image source={require('../../../assets/logo.png')} style={styles.logo} />
+              <Image source={logo} style={styles.logo} />
               <Title text='WELCOME' />
               
               <View style={[styles.outerBorder, styles.shadowBox]}>
@@ -46,7 +47,7 @@ export default function Welcome() {
                     </View>
                   )} 
                   <Video 
-                    source={require('../../../assets/welcome_video.mp4')}
+                    source={video_welcome}
                     rate={1.0}
                     isMuted={false}
                     shouldPlay={true} 
@@ -59,7 +60,7 @@ export default function Welcome() {
               </View>
               
               <View style={styles.scanText}>
-                <Image source={require('../../../assets/Scan.png')} style={styles.scan} />
+                <Image source={scan} style={styles.scan} />
                 <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">Follow the arrow to scan card</Text>
               </View>
 

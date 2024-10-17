@@ -10,6 +10,7 @@ import Title from '../../components/title/title';
 import { TextInput } from 'react-native-paper';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../services/db';
+import { bg, logo } from '../../../img/img';
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 export default function Login() {
@@ -40,7 +41,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <ImageBackground 
-        source={require('../../../assets/bg.png')} 
+        source={bg} 
         style={styles.bgImage}
         onLoadStart={() => setIsImageLoading(true)} 
         onLoadEnd={() => setIsImageLoading(false)} 
@@ -52,7 +53,7 @@ export default function Login() {
           ) : (
             <>
               <View style={styles.content}>
-                  <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+                  <Image source={logo} style={styles.logo}/>
 
                   <Title text='LOGIN'/>
                   <TextInput 

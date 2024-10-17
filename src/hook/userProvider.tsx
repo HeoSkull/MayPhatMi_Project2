@@ -24,39 +24,38 @@ const UserContext = createContext<UserProps | undefined>(undefined);
 
 
 export const UserProvider: React.FC<{children: ReactNode}> = ({ children }):JSX.Element => {
-    const dispatch = useDispatch();
-    const navigation = useNavigation<NavigationProp<any>>(); 
-    const userDetail = useSelector((state: StoreState) => state.user.userDetail); 
+  const dispatch = useDispatch();
+  const navigation = useNavigation<NavigationProp<any>>(); 
+  const userDetail = useSelector((state: StoreState) => state.user.userDetail); 
 
-    const [user, setUser] = useState<UserProps['user']>({
-        name: userDetail.name || '',
-        birthday: userDetail.birthday || '',
-        gender: userDetail.gender || '',
-        department: userDetail.department || '',
-        noodleCount: userDetail.noodleCount || 0, 
-    });
+  const [user, setUser] = useState<UserProps['user']>({
+      name: userDetail.name || '',
+      birthday: userDetail.birthday || '',
+      gender: userDetail.gender || '',
+      department: userDetail.department || '',
+      noodleCount: userDetail.noodleCount || 0, 
+  });
 
-    useEffect(() => {
-        setUser({
-            name: userDetail.name || '',
-            birthday: userDetail.birthday || '',
-            gender: userDetail.gender || '',
-            department: userDetail.department || '',
-            noodleCount: userDetail.noodleCount || 0,
-        });
-    }, [userDetail]);
+  useEffect(() => {
+      setUser({
+          name: userDetail.name || '',
+          birthday: userDetail.birthday || '',
+          gender: userDetail.gender || '',
+          department: userDetail.department || '',
+          noodleCount: userDetail.noodleCount || 0,
+      });
+  }, [userDetail]);
     
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log(user);
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const userData = docSnap.data() as UserProps['user'];
           dispatch(setUserDetail(userData)) ;
           dispatch(setNoodleCount(userData.noodleCount));
-          console.log(userData)
+          console.log('user logged in: ',userData)
         } else {
           console.log('No document exists');
         }
@@ -64,40 +63,45 @@ export const UserProvider: React.FC<{children: ReactNode}> = ({ children }):JSX.
         console.log('No user is logged in');
       }
     });
-        return () => unsubscribe();
-    }, []);
+    return () =>{
+      unsubscribe();
+      dispatch(setUserDetail({}));
+      dispatch(setNoodleCount(0));
+    } 
+  }, []);
 
-    const handleNoodleClick = async () => {
-        if (user.noodleCount > 0) {
-            const newNoodleCount = user.noodleCount - 1; 
-            dispatch(setNoodleCount(newNoodleCount)); 
+  const handleNoodleClick = async () => {
+    if (user.noodleCount > 0) {
+        const newNoodleCount = user.noodleCount - 1; 
+        dispatch(setNoodleCount(newNoodleCount)); 
 
-            navigation.navigate('Done'); 
-            const currentUser = auth.currentUser; 
-            if (currentUser) {
-                const docRef = doc(db, 'users', currentUser.uid); 
-                await updateDoc(docRef, { noodleCount: newNoodleCount }); 
-            }
-
-        } else {
-            navigation.navigate('OutOfNoodles'); 
+        navigation.navigate('Done'); 
+        const currentUser = auth.currentUser; 
+        if (currentUser) {
+            const docRef = doc(db, 'users', currentUser.uid); 
+            await updateDoc(docRef, { noodleCount: newNoodleCount }); 
         }
-    };
-    const handleLogOut = async() => {
-        try { 
-          await auth.signOut();
-          navigation.navigate('Login');
-        } catch (error) {
-          console.log(error);
-          alert(error);
-        }
-      }
 
-    return (
-        <UserContext.Provider value={{ user, updateUser: setUser, handleNoodleClick, handleLogOut }}>
-            {children}
-        </UserContext.Provider>
-    )
+    } else {
+        navigation.navigate('OutOfNoodles'); 
+    }
+  };
+
+  const handleLogOut = async() => {
+    try { 
+      await auth.signOut();
+      navigation.navigate('Login');
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  }
+
+  return (
+    <UserContext.Provider value={{ user, updateUser: setUser, handleNoodleClick, handleLogOut }}>
+        {children}
+    </UserContext.Provider>
+  )
 };
 
 export const useUser = () => {

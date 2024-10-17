@@ -7,6 +7,7 @@ import Title from '../../components/title/title';
 import { CustomFonts } from '../../shared/fonts';
 import { RootStackParamList } from '../../navigator/RootNavigator';
 import usePanResponder from '../../shared/usePanResponder';
+import { bg, logo, outOfNoodle } from '../../../img/img';
 
 type OutOfNoodleScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'OutOfNoodles'>;
 
@@ -22,7 +23,7 @@ export default function OutOfNoodles() {
   return (
     <View style={styles.container} {...panResponder.panHandlers}>
       <ImageBackground 
-        source={require('../../../assets/bg.png')} 
+        source={bg} 
         style={styles.bgImage}
         onLoadStart={() => setIsImageLoading(true)} 
         onLoadEnd={() => setIsImageLoading(false)} 
@@ -34,7 +35,7 @@ export default function OutOfNoodles() {
           ) : (
             <>
               <View style={styles.content}>
-                  <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+                  <Image source={logo} style={styles.logo}/>
 
                   <Title text='OUT OF NOODLES'/>
 
@@ -43,7 +44,7 @@ export default function OutOfNoodles() {
                     cup of noodles left in the machine. Please fill in to continue.
                   </Text>
 
-                  <Image source={require('../../../assets/outOfNoodle.png')} style={styles.img}/>
+                  <Image source={outOfNoodle} style={styles.img}/>
               </View>
             </>
           )}

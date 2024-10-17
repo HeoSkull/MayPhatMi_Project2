@@ -1,5 +1,6 @@
 import { Image, StyleSheet, View, Text } from "react-native"
 import { CustomFonts } from "../../../shared/fonts"
+import { done } from "../../../../img/img";
 
 type CardProps= {
     fullname?: string,
@@ -14,7 +15,7 @@ export default function CardInfo({fullname, birthday, gender, department}: CardP
     return (
         <View style={[styles.outerBorder, styles.shadowBox]}>
             <View style={styles.innerBorder}>
-                <Image source={require('../../../../assets/done.png')} style={styles.img}/>
+                <Image source={done} style={styles.img}/>
                 <View style={{alignItems: 'flex-start'}}>
                     <Text style={styles.title}>Full Name: </Text>
                     <Text style={styles.title}>Birthday: </Text>

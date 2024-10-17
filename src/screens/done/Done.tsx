@@ -7,6 +7,7 @@ import { RootStackParamList } from '../../navigator/RootNavigator';
 import { CustomFonts } from '../../shared/fonts';
 import ButtonClick from '../../components/button/buttonClick';
 import Title from '../../components/title/title';
+import { arrowDownGesture, bg, done, like_done, logo } from '../../../img/img';
 type DoneScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Done'>;
 
 export default function Done() {
@@ -32,7 +33,7 @@ export default function Done() {
   return (
     <View style={styles.container}>
       <ImageBackground 
-        source={require('../../../assets/bg.png')} 
+        source={bg} 
         style={styles.bgImage}
         onLoadStart={() => setIsImageLoading(true)} 
         onLoadEnd={() => setIsImageLoading(false)} 
@@ -44,22 +45,21 @@ export default function Done() {
           ) : (
             <>
               <View style={styles.content}>
-                  <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
+                  <Image source={logo} style={styles.logo}/>
 
                   <Title text='DONE'/>
 
-                  <Image source={require('../../../assets/done.png')} style={styles.img}/>
+                  <Image source={done} style={styles.img}/>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.text}>Enjoy your noodles </Text>
-                    <Image source={require('../../../assets/like_done.png')} style={{height: 40, width: 40}}/>
+                    <Image source={like_done} style={{height: 40, width: 40}}/>
                   </View>
 
-                  <View style={{marginTop: 15}}>
-                    <ButtonClick text='Back to home' onClick={()=> navigation.navigate('Information')}/> 
-                  </View> 
-                  <View style={{flexDirection: 'column', alignItems: 'center', marginTop: 10}} {...panResponder.panHandlers}>
+                  <ButtonClick text='Back to home' onClick={()=> navigation.navigate('Information')}/> 
+
+                  <View style={{flexDirection: 'column', alignItems: 'center'}} {...panResponder.panHandlers}>
                     <Text style={[styles.textUnderButton]}>Get them below </Text>
-                    <Image source={require('../../../assets/ArrowDownGesture.png')} style={{height: 40, width: 20}}/>
+                    <Image source={arrowDownGesture} style={{height: 40, width: 20}}/>
                   </View>
               </View>
             </>

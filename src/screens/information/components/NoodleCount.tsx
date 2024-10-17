@@ -2,7 +2,7 @@ import { View, Image, StyleSheet, Text } from "react-native"
 import { CustomFonts } from "../../../shared/fonts"
 
 type NoodleCountProps = {
-    img?: number,
+    img?: number | { uri: string },
     text?: string
 }
 
